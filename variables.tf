@@ -10,3 +10,8 @@ variable "subject_alternative_names" {
   type        = map(string)
   default     = {}
 }
+variable "wait_for_validation" {
+  description = "Whether to wait for the validation to complete"
+  type        = bool
+  default     = true
+}

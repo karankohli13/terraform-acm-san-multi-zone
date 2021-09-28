@@ -18,14 +18,14 @@ resource "aws_route53_record" "cert-validation" {
       record = dvo.resource_record_value
       type   = dvo.resource_record_type
     }
+    if lookup(var.subject_alternative_names, dvo.domain_name, null) != null
   }
   allow_overwrite = true
   name            = each.value.name
   records         = [each.value.record]
   ttl             = 60
   type            = each.value.type
-  // Use a fake zone ID (12345) as lookup so that it doesn't throw an error when changing the certificate (if a SAN was removed)
-  zone_id = each.key == var.primary_domain.domain ? var.primary_domain.hosted_zone_id : lookup(var.subject_alternative_names, each.key, "12345")
+  zone_id = each.key == var.primary_domain.domain ? var.primary_domain.hosted_zone_id : lookup(var.subject_alternative_names, each.key, var.primary_domain.hosted_zone_id)
 }
 
 // Validate the certificate
